@@ -1,114 +1,117 @@
 --====================================================
---  SUEPHUB UI LIBRARY
---  Dibuat khusus untuk kamu oleh ChatGPT
+--  SUEPHUB UI LIBRARY (BY CHATGPT)
 --====================================================
 
 local SuepHub = {}
 
--- MakeWindow
+-- buat window utama
 function SuepHub:CreateWindow(title)
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Parent = game.CoreGui
+    ScreenGui.Parent = game:GetService("CoreGui")
 
     local Main = Instance.new("Frame")
-    Main.Size = UDim2.new(0, 480, 0, 350)
-    Main.Position = UDim2.new(0.5, -240, 0.5, -175)
-    Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Main.Size = UDim2.new(0, 500, 0, 360)
+    Main.Position = UDim2.new(0.5, -250, 0.5, -180)
+    Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     Main.BorderSizePixel = 0
-    Main.Parent = ScreenGui
     Main.Active = true
     Main.Draggable = true
+    Main.Parent = ScreenGui
 
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, 0, 0, 40)
-    Title.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-    Title.Text = title or "SuepHub"
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.Font = Enum.Font.GothamBold
-    Title.TextSize = 20
-    Title.Parent = Main
+    local Top = Instance.new("TextLabel")
+    Top.Size = UDim2.new(1, 0, 0, 40)
+    Top.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Top.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Top.Font = Enum.Font.GothamBold
+    Top.TextSize = 20
+    Top.Text = title
+    Top.Parent = Main
 
-    local Window = {Main = Main}
+    local TabHolder = Instance.new("Frame")
+    TabHolder.Size = UDim2.new(0, 150, 1, -40)
+    TabHolder.Position = UDim2.new(0, 0, 0, 40)
+    TabHolder.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    TabHolder.Parent = Main
+
+    local TabLayout = Instance.new("UIListLayout")
+    TabLayout.Parent = TabHolder
+    TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    local ContentHolder = Instance.new("Frame")
+    ContentHolder.Size = UDim2.new(1, -150, 1, -40)
+    ContentHolder.Position = UDim2.new(0, 150, 0, 40)
+    ContentHolder.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+    ContentHolder.Parent = Main
+
+    local Window = {
+        Main = Main,
+        TabHolder = TabHolder,
+        Content = ContentHolder
+    }
+
     setmetatable(Window, {__index = SuepHub})
-
     return Window
 end
 
--- CreateTab
-function SuepHub:CreateTab(name, icon)
-    local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(0, 120, 0, 32)
-    Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.Text = name or "Tab"
-    Button.Font = Enum.Font.GothamBold
-    Button.TextSize = 14
-    Button.Parent = self.Main
+-- buat tab
+function SuepHub:CreateTab(name)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(1, -10, 0, 35)
+    TabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.Text = name
+    TabButton.Font = Enum.Font.GothamBold
+    TabButton.TextSize = 14
+    TabButton.Parent = self.TabHolder
 
-    local PageFrame = Instance.new("Frame")
-    PageFrame.Size = UDim2.new(1, -130, 1, -50)
-    PageFrame.Position = UDim2.new(0, 130, 0, 50)
-    PageFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    PageFrame.Visible = false
-    PageFrame.Parent = self.Main
+    local Page = Instance.new("ScrollingFrame")
+    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.CanvasSize = UDim2.new(0, 0, 0, 0)
+    Page.BackgroundTransparency = 1
+    Page.ScrollBarThickness = 6
+    Page.Visible = false
+    Page.Parent = self.Content
 
-    Button.MouseButton1Click:Connect(function()
-        for _,v in pairs(self.Main:GetChildren()) do
-            if v:IsA("Frame") and v ~= PageFrame and v.Name ~= "" then
+    local PageLayout = Instance.new("UIListLayout")
+    PageLayout.Parent = Page
+    PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    PageLayout.Padding = UDim.new(0, 6)
+
+    TabButton.MouseButton1Click:Connect(function()
+        for _,v in pairs(self.Content:GetChildren()) do
+            if v:IsA("ScrollingFrame") then
                 v.Visible = false
             end
         end
-        PageFrame.Visible = true
+        Page.Visible = true
     end)
 
-    local Tab = {Page = PageFrame}
+    local Tab = {Page = Page}
     setmetatable(Tab, {__index = SuepHub})
     return Tab
 end
 
--- CreateSection
+-- buat section
 function SuepHub:CreateSection(name)
-    local SectionLabel = Instance.new("TextLabel")
-    SectionLabel.Size = UDim2.new(1, -10, 0, 25)
-    SectionLabel.BackgroundTransparency = 1
-    SectionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-    SectionLabel.Font = Enum.Font.GothamBold
-    SectionLabel.TextSize = 14
-    SectionLabel.TextXAlignment = Enum.TextXAlignment.Left
-    SectionLabel.Text = "  " .. (name or "Section")
-    SectionLabel.Parent = self.Page
+    local SectionTitle = Instance.new("TextLabel")
+    SectionTitle.Size = UDim2.new(1, -10, 0, 25)
+    SectionTitle.BackgroundTransparency = 1
+    SectionTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SectionTitle.Font = Enum.Font.GothamBold
+    SectionTitle.TextSize = 16
+    SectionTitle.Text = name
+    SectionTitle.Parent = self.Page
 
     local Section = {Parent = self.Page}
     setmetatable(Section, {__index = SuepHub})
     return Section
 end
 
--- CreateToggle
-function SuepHub:CreateToggle(name, default, callback)
-    local ToggleButton = Instance.new("TextButton")
-    ToggleButton.Size = UDim2.new(1, -10, 0, 28)
-    ToggleButton.Position = UDim2.new(0, 5, 0, 30)
-    ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ToggleButton.Text = name .. ": " .. (default and "ON" or "OFF")
-    ToggleButton.Font = Enum.Font.Gotham
-    ToggleButton.TextSize = 14
-    ToggleButton.Parent = self.Parent
-
-    local state = default or false
-
-    ToggleButton.MouseButton1Click:Connect(function()
-        state = not state
-        ToggleButton.Text = name .. ": " .. (state and "ON" or "OFF")
-        pcall(callback, state)
-    end)
-end
-
--- CreateButton
+-- buat button
 function SuepHub:CreateButton(name, callback)
     local Btn = Instance.new("TextButton")
-    Btn.Size = UDim2.new(1, -10, 0, 28)
-    Btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    Btn.Size = UDim2.new(1, -10, 0, 30)
+    Btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     Btn.Text = name
     Btn.Font = Enum.Font.Gotham
@@ -120,7 +123,26 @@ function SuepHub:CreateButton(name, callback)
     end)
 end
 
--- CreateSlider
+-- buat toggle
+function SuepHub:CreateToggle(name, default, callback)
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(1, -10, 0, 30)
+    Btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Btn.Text = name .. ": " .. (default and "ON" or "OFF")
+    Btn.Font = Enum.Font.Gotham
+    Btn.TextSize = 14
+    Btn.Parent = self.Parent
+
+    local state = default or false
+    Btn.MouseButton1Click:Connect(function()
+        state = not state
+        Btn.Text = name .. ": " .. (state and "ON" or "OFF")
+        pcall(callback, state)
+    end)
+end
+
+-- buat slider sederhana
 function SuepHub:CreateSlider(name, min, max, default, callback)
     local Frame = Instance.new("Frame")
     Frame.Size = UDim2.new(1, -10, 0, 50)
@@ -136,17 +158,18 @@ function SuepHub:CreateSlider(name, min, max, default, callback)
     Label.Text = name .. ": " .. default
     Label.Parent = Frame
 
-    local Slider = Instance.new("TextButton")
-    Slider.Size = UDim2.new(1, -10, 0, 20)
-    Slider.Position = UDim2.new(0, 5, 0, 25)
-    Slider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-    Slider.Text = ""
-    Slider.Parent = Frame
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(1, -10, 0, 20)
+    Btn.Position = UDim2.new(0, 5, 0, 25)
+    Btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    Btn.Text = "Change"
+    Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Btn.Font = Enum.Font.Gotham
+    Btn.TextSize = 12
+    Btn.Parent = Frame
 
-    local value = default
-
-    Slider.MouseButton1Click:Connect(function()
-        value = math.random(min, max) -- (sederhana, bisa diupgrade)
+    Btn.MouseButton1Click:Connect(function()
+        local value = math.random(min, max)
         Label.Text = name .. ": " .. value
         pcall(callback, value)
     end)
