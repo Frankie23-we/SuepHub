@@ -1,7 +1,7 @@
 --====================================================
 -- LOAD UI SUEPHUB
 --====================================================
-local SuepHub = loadstring(game:HttpGet("https://raw.githubusercontent.com/Frankie23-we/SuepHub/refs/heads/main/SuepHubUI.LUA"))()
+local SuepHub = loadstring(game:HttpGet("https://pastebin.com/SQ4s7zgy"))()
 
 local Window = SuepHub:CreateWindow("SuepHub | Fish It")
 
