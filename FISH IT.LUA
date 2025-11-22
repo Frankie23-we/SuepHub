@@ -2,7 +2,7 @@
 --========================================================
 -- SUEPHUB LOAD
 --========================================================
-local SuepHub = loadstring(game:HttpGet("LINK_SUEPHUB_KAMU"))()
+local SuepHub = loadstring(game:HttpGet("https://raw.githubusercontent.com/Frankie23-we/SuepHub/refs/heads/main/SuepHubUI.LUA"))()
 
 -- Contoh API SuepHub (SESUIDKAN DENGAN LIB ASLI):
 -- Window:CreateTab(name, icon)
